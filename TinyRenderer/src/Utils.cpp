@@ -77,7 +77,7 @@ Vec3f barycentric(Vec2i* v, Vec2i p) {
 	Vec3f cv1 = Vec3f(f0.x, f1.x, f2.x);
 	Vec3f cv2 = Vec3f(f0.y, f1.y, f2.y);
 
-	Vec3f bv = cross(cv1, cv2);
+	Vec3f bv = cv1 ^ cv2;
 
 	if (std::abs(bv.x) < 1)
 		return Vec3f(-1, 1, 1);
@@ -116,5 +116,29 @@ void DrawUtils::triangle_by_bounding_box_check(Vec2i* v, TGAImage &image, TGACol
 
 			image.set(p.x, p.y, color);
 		}
+	}
+}
+
+void DrawUtils::model(Model* model, Vec3f light_dir, TGAImage &image) {
+	for (int i = 0; i < model->nfaces(); i++) {
+		auto face = model->face(i);
+		Vec2i screen_coord[3];
+		Vec3f world_coord[3];
+
+		for (int j = 0; j < 3; j++) {
+			Vec3f v = model->vert(face[j]);
+			screen_coord[j] = Vec2i((v.x + 1.0) * 800 / 2.0f, (v.y + 1.0) * 800 / 2.0f);
+			world_coord[j] = v;
+		}
+
+		Vec3f v1(world_coord[1] - world_coord[0]);
+		Vec3f v2(world_coord[2] - world_coord[0]);
+		Vec3f n = v2 ^ v1;
+		n.normalize();
+
+		float intensity = n * light_dir;
+
+		if (intensity > 0)
+			triangle_by_bounding_box_check(screen_coord, image, TGAColor(intensity * 255, intensity * 255, intensity * 255, 255));
 	}
 }

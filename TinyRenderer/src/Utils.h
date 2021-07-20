@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "tgaimage.h"
 #include "geometry.h"
+#include "model.h"
 
 const TGAColor WHITE = TGAColor(255, 255, 255, 0);
 const TGAColor RED = TGAColor(0, 0, 255, 0);
@@ -16,6 +17,7 @@ public:
 	static void line(int x0, int y0, int x1, int y1, TGAImage &image, TGAColor color);
 	static void triangle_by_horizontal_lines(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color);
 	static void triangle_by_bounding_box_check(Vec2i* v, TGAImage &image, TGAColor color);
+	static void model(Model* model, Vec3f light_dir, TGAImage &image);
 
 private:
 	static void horizontal_line(int x0, int x1, int y, TGAImage &image, TGAColor color);
