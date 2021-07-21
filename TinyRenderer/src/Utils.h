@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <vector>
 #include "tgaimage.h"
 #include "geometry.h"
 #include "model.h"
@@ -7,8 +8,9 @@ const TGAColor WHITE = TGAColor(255, 255, 255, 0);
 const TGAColor RED = TGAColor(0, 0, 255, 0);
 const TGAColor GREEN = TGAColor(255, 0, 0, 0);
 
-Vec3f barycentric(Vec2i *pts, Vec2i p);
+Vec3f barycentric(Vec3f* v, Vec3f p);
 bool is_valid_barycentric(const Vec3f& bc);
+const Vec3f screen_to_world(const Vec3f& p);
 template <typename T> const T max(const T& a, const T& b);
 template <typename T> const T min(const T& a, const T& b);
 
@@ -16,7 +18,8 @@ class DrawUtils {
 public:
 	static void line(int x0, int y0, int x1, int y1, TGAImage &image, TGAColor color);
 	static void triangle_by_horizontal_lines(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage &image, TGAColor color);
-	static void triangle_by_bounding_box_check(Vec2i* v, TGAImage &image, TGAColor color);
+	static void triangle_by_bounding_box_check(Vec3f* v, TGAImage &image, float* zbuffer, TGAColor color);
+	static void triangle(Vec3f* v, TGAImage &image, float* zbuffer, std::vector<Vec2f>& texture_coord, TGAImage &texture, float intensity = 1);
 	static void model(Model* model, Vec3f light_dir, TGAImage &image);
 
 private:
