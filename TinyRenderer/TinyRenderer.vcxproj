@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\geometry.h" />
+    <ClInclude Include="src\Instrumentor.h" />
     <ClInclude Include="src\model.h" />
     <ClInclude Include="src\tgaimage.h" />
     <ClInclude Include="src\Utils.h" />

@@ -8,11 +8,30 @@ const TGAColor WHITE = TGAColor(255, 255, 255, 0);
 const TGAColor RED = TGAColor(0, 0, 255, 0);
 const TGAColor GREEN = TGAColor(255, 0, 0, 0);
 
+const int depth = 255;
+const int height = 800;
+const int width = 800;
+
+/////////////////////////////////////////////////////////////////////////
+
 Vec3f barycentric(Vec3f* v, Vec3f p);
 bool is_valid_barycentric(const Vec3f& bc);
-const Vec3f screen_to_world(const Vec3f& p);
 template <typename T> const T max(const T& a, const T& b);
 template <typename T> const T min(const T& a, const T& b);
+
+/////////////////////////////////////////////////////////////////////////
+
+class ViewInfo {
+public:
+	static void look_at(Vec3f eye, Vec3f center, Vec3f up);
+	static void view_port(int x, int y, int w, int h);
+	static const Vec3f world_to_screen(const Vec3f pos);
+
+private:
+	static Matrix ViewMatrix;
+	static Matrix ProjectionMatrix;
+	static Matrix ViewPortMatrix;
+};
 
 class DrawUtils {
 public:

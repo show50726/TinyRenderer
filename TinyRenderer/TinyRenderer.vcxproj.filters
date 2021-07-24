@@ -33,6 +33,9 @@
     <ClInclude Include="src\Utils.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="src\Instrumentor.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -1,5 +1,45 @@
 ﻿#include "Utils.h"
 
+Matrix ViewInfo::ProjectionMatrix;
+Matrix ViewInfo::ViewMatrix;
+Matrix ViewInfo::ViewPortMatrix;
+
+
+void ViewInfo::look_at(Vec3f eye, Vec3f center, Vec3f up) {
+	Vec3f z = (eye - center).normalize();
+	Vec3f x = cross(up, z).normalize();
+	Vec3f y = cross(z, x).normalize();
+
+	ViewMatrix = Matrix::identity();
+	for (int i = 0; i < 3; i++) {
+		ViewMatrix[0][i] = x[i];
+		ViewMatrix[1][i] = y[i];
+		ViewMatrix[2][i] = z[i];
+		ViewMatrix[3][i] = -center[i];
+	}
+
+	ProjectionMatrix = Matrix::identity();
+	ProjectionMatrix[3][2] = -1.0 / (eye - center).norm();
+}
+
+// Mapping [-1, 1] * [-1, 1] * [-1, 1] to [x, x + w] * [y, y + h] * [0, depth]
+void ViewInfo::view_port(int x, int y, int w, int h) {
+	ViewPortMatrix = Matrix::identity();
+
+	ViewPortMatrix[0][3] = x + w / 2.0f;
+	ViewPortMatrix[1][3] = y + h / 2.0f;
+	ViewPortMatrix[2][3] = depth / 2.0f;
+
+	ViewPortMatrix[0][0] = w / 2.0f;
+	ViewPortMatrix[1][1] = h / 2.0f;
+	ViewPortMatrix[2][2] = depth / 2.0f;
+}
+
+const Vec3f ViewInfo::world_to_screen(const Vec3f p) {
+	auto pos = ViewPortMatrix * ProjectionMatrix * ViewMatrix * to_Matrix(p);
+	return Vec3f(static_cast<int>(pos[0][0] / pos[3][0]), static_cast<int>(pos[1][0] / pos[3][0]), static_cast<int>(pos[2][0] / pos[3][0]));
+}
+
 void DrawUtils::line(int x0, int y0, int x1, int y1, TGAImage &image, TGAColor color) {
 	bool steep = false;
 	if (std::abs(x0 - x1)<std::abs(y0 - y1)) { // if the line is steep, we transpose the image 
@@ -92,10 +132,6 @@ bool is_valid_barycentric(const Vec3f& bc) {
 	return true;
 }
 
-const Vec3f screen_to_world(const Vec3f& p) {
-	return Vec3f((int)((p.x + 1.0) * 800 / 2.0f), (int)((p.y + 1.0) * 800 / 2.0f), p.z);
-}
-
 // Draw triangle by checking if each point in a bounding box is in the triangle or not
 void DrawUtils::triangle_by_bounding_box_check(Vec3f* v, TGAImage &image, float* zbuffer, TGAColor color) {
 	Vec2f minbbox(image.get_width() - 1, image.get_height() - 1);
@@ -147,7 +183,7 @@ void DrawUtils::model(Model* model, Vec3f light_dir, TGAImage &image) {
 
 		for (int j = 0; j < 3; j++) {
 			Vec3f v = model->vert(face[j]);
-			screen_coord[j] = screen_to_world(v);
+			screen_coord[j] = ViewInfo::world_to_screen(v);
 			world_coord[j] = v;
 		}
 

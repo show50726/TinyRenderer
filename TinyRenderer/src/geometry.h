@@ -54,6 +54,30 @@ template<size_t Dim, typename T> const vec<Dim, T> operator*(const float f, cons
 	return res;
 }
 
+
+template<typename T> const mat<4, 1, float> to_Matrix(const vec<3, T>& v) {
+	mat<4, 1, float> res;
+	res[0][0] = v[0];
+	res[1][0] = v[1];
+	res[2][0] = v[2];
+	res[3][0] = 1.0f;
+
+	return res;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T> struct vec<4, T> {
+	vec() :x(T()), y(T()), z(T()), w(T()) {}
+	vec(T X, T Y, T Z, T W) :x(X), y(Y), z(Z), w(W) {}
+
+	template <class U> vec<4, T>(const vec<4, U>& v);
+	T& operator[] (const size_t i) { return const_cast<T&>(static_cast<const vec<4, T>&>(*this)[i]); }
+	const T& operator[] (const size_t i) const { assert(i < 4); return i <= 0 ? x : (i == 1 ? y : (i == 2 ? z : w)); }
+
+	T x, y, z, w;
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template<size_t DIM, typename T> T operator*(const vec<DIM, T>& lhs, const vec<DIM, T>& rhs) {
