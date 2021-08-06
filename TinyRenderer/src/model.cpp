@@ -8,7 +8,12 @@
 Model::Model(const char *filename) : verts_(), faces_(), norms_(), uv_coord_(), texture_img(), normal_img(), specular_img() {
 	std::ifstream in;
 	in.open(filename, std::ifstream::in);
-	if (in.fail()) return;
+	
+	if (in.fail()) {
+		std::cerr << "Loading file " << filename << " failed!" << std::endl;
+		return;
+	}
+
 	std::string line;
 	while (!in.eof()) {
 		std::getline(in, line);
@@ -67,6 +72,13 @@ void Model::load_texture(std::string filename, const char* suffix, TGAImage* img
 	size_t dot = texfile.find_last_of(".");
 	if (dot != std::string::npos) {
 		texfile = texfile.substr(0, dot) + std::string(suffix);
+		bool ok = img->read_tga_file(texfile.c_str());
+
+		if (!ok) {
+			std::cerr << "Loading file " << texfile << " failed!" << std::endl;
+			return;
+		}
+
 		img->flip_vertically();
 	}
 }
