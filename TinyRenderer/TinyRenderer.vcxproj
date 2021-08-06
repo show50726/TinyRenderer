@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\CustomGL.h" />
     <ClInclude Include="src\geometry.h" />
     <ClInclude Include="src\Instrumentor.h" />
     <ClInclude Include="src\model.h" />
@@ -156,7 +157,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CustomGL.cpp" />
     <ClCompile Include="src\model.cpp" />
+    <ClCompile Include="src\Shaders\GouraudShader.h" />
     <ClCompile Include="src\tgaimage.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -8,20 +8,27 @@
 class Model {
 private:
 	std::vector<Vec3f> verts_;
-	std::vector<std::vector<int>> faces_;
-	std::vector<std::vector<float>> texture_coord_;
-	std::vector<std::vector<int>> textures_;
+	std::vector<std::vector<Vec3i>> faces_;
+	std::vector<Vec3f> norms_;
+	std::vector<Vec2f> uv_coord_;
+	TGAImage* texture_img;
+	TGAImage* normal_img;
+	TGAImage* specular_img;
+	void load_texture(std::string filename, const char* suffix, TGAImage* img);
 
 public:
-	Model(const char *filename, const char* texturename = NULL);
+	Model(const char *filename);
 	~Model();
 	int nverts();
 	int nfaces();
 	Vec3f vert(int i);
+	Vec3f vert(int iface, int nthvert);
+	Vec3f normal(int iface, int nthvert);
+	Vec3f normal(Vec2f uv);
+	Vec2f uv(int iface, int nthvert);
+	TGAColor diffuse(Vec2f uv);
+	float specular(Vec2f uv);
 	std::vector<int> face(int idx);
-	std::vector<int> texture(int idx);
-	std::vector<float> texture_coord(int idx);
-	TGAImage* texture_img;
 };
 
 #endif //__MODEL_H__

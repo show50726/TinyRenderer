@@ -55,12 +55,12 @@ template<size_t Dim, typename T> const vec<Dim, T> operator*(const float f, cons
 }
 
 
-template<typename T> const mat<4, 1, float> to_Matrix(const vec<3, T>& v) {
+template<typename T> const mat<4, 1, float> to_Matrix(const vec<4, T>& v) {
 	mat<4, 1, float> res;
 	res[0][0] = v[0];
 	res[1][0] = v[1];
 	res[2][0] = v[2];
-	res[3][0] = 1.0f;
+	res[3][0] = v[3];
 
 	return res;
 }

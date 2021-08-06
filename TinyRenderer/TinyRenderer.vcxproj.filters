@@ -36,6 +36,9 @@
     <ClInclude Include="src\Instrumentor.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="src\CustomGL.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -51,6 +54,12 @@
       <Filter>來源檔案</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CustomGL.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shaders\GouraudShader.h">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
