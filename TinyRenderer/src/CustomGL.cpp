@@ -6,6 +6,11 @@ Matrix ViewInfo::ProjectionMatrix;
 Matrix ViewInfo::ViewMatrix;
 Matrix ViewInfo::ViewPortMatrix;
 
+const Matrix ViewInfo::get_MVP() {
+	//std::cout << ViewPortMatrix << ProjectionMatrix << ViewMatrix << std::endl;
+	return ViewPortMatrix * ProjectionMatrix * ViewMatrix;
+}
+
 void ViewInfo::look_at(Vec3f eye, Vec3f center, Vec3f up) {
 	Vec3f z = (eye - center).normalize();
 	Vec3f x = cross(up, z).normalize();
@@ -151,7 +156,7 @@ void DrawUtils::triangle_by_bounding_box_check(Vec3f* v, TGAImage &image, float*
 	}
 }
 
-void DrawUtils::model(Model* model, Vec3f light_dir, TGAImage &image, IShader* shader, TGAImage& zbuffer) {
+void DrawUtils::model(Model* model, TGAImage &image, IShader* shader, TGAImage& zbuffer) {
 	for (int i = 0; i < model->nfaces(); i++) {
 		Vec4f screen_coords[3];
 		for (int j = 0; j < 3; j++) {

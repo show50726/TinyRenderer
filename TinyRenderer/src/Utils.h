@@ -9,7 +9,7 @@ const TGAColor WHITE = TGAColor(255, 255, 255, 0);
 const TGAColor RED = TGAColor(0, 0, 255, 0);
 const TGAColor GREEN = TGAColor(255, 0, 0, 0);
 
-const Vec3f light_dir(1, 1, 1);
+const Vec3f light_dir(1, 1, 0);
 
 const float depth = 255.0;
 const int height = 800;

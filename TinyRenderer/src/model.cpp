@@ -138,6 +138,6 @@ TGAColor Model::diffuse(Vec2f uv) {
 }
 
 float Model::specular(Vec2f uv) {
-	Vec2i uv_(uv[0] * texture_img->get_width(), uv[1] * texture_img->get_height());
-	return specular_img->get(uv_[0], uv_[1]).r / 1.0f;
+	Vec2i uv_(uv[0] * specular_img->get_width(), uv[1] * specular_img->get_height());
+	return specular_img->get(uv_[0], uv_[1]).b / 1.0f;
 }
