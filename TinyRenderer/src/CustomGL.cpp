@@ -28,6 +28,11 @@ void ViewInfo::look_at(Vec3f eye, Vec3f center, Vec3f up) {
 	ProjectionMatrix[3][2] = -1.0 / (eye - center).norm();
 }
 
+void ViewInfo::projection(float coeff) {
+	ProjectionMatrix = Matrix::identity();
+	ProjectionMatrix[3][2] = coeff;
+}
+
 // Mapping [-1, 1] * [-1, 1] * [-1, 1] to [x, x + w] * [y, y + h] * [0, depth]
 void ViewInfo::view_port(int x, int y, int w, int h) {
 	ViewPortMatrix = Matrix::identity();
@@ -156,7 +161,7 @@ void DrawUtils::triangle_by_bounding_box_check(Vec3f* v, TGAImage &image, float*
 	}
 }
 
-void DrawUtils::model(Model* model, TGAImage &image, IShader* shader, TGAImage& zbuffer) {
+void DrawUtils::model(Model* model, TGAImage &image, IShader* shader, float* zbuffer) {
 	for (int i = 0; i < model->nfaces(); i++) {
 		Vec4f screen_coords[3];
 		for (int j = 0; j < 3; j++) {
@@ -167,7 +172,7 @@ void DrawUtils::model(Model* model, TGAImage &image, IShader* shader, TGAImage& 
 	}
 }
 
-void DrawUtils::triangle(Vec4f* v, TGAImage &image, TGAImage& zbuffer, IShader* shader) {
+void DrawUtils::triangle(Vec4f* v, TGAImage &image, float* zbuffer, IShader* shader) {
 	Vec2f minbbox(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 	Vec2f maxbbox(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max());
 
@@ -201,14 +206,14 @@ void DrawUtils::triangle(Vec4f* v, TGAImage &image, TGAImage& zbuffer, IShader* 
 			w += v[2].w*bc.z;
 
 
-			int frag_depth = max(0, min(255, int(z / w + 0.5f)));
-			if (zbuffer.get(p.x, p.y).b > frag_depth) {
+			int frag_depth = z / w;
+			if (zbuffer[p.x + p.y * image.get_width()] > frag_depth) {
 				continue;
 			}
 
 			bool discard = shader->fragment(bc, color);
 			if (!discard) {
-				zbuffer.set(p.x, p.y, TGAColor(0, 0, frag_depth));
+				zbuffer[p.x + p.y * image.get_width()] = frag_depth;
 				image.set(p.x, p.y, color);
 			}
 		}
